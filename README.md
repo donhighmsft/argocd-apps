@@ -4,13 +4,14 @@
 
 ```console
 terraform init
-terraform apply -auto-approve
+cp terraform.tfvarsexample terraform.tfvars
+terraform apply -auto-approve -var-file=terraform.tfvars
 ```
 
 The template will install AKS and call the ArgoCD module to install everything that is in this repo under the `/apps` folder, including `cert-manager` and `ingress-nginx`. To allow for the certificates creation, you need to map the ingress public IP to a real wildcard DNS record in a DNS zone (in Azure):
 
 ```console
-INGRESS_IP=`kg svc -n ingress ingress-nginx-controller --output=jsonpath="{.status.loadBalancer.ingress[0]['ip']}"`
+INGRESS_IP=`kubectl get svc -n ingress ingress-nginx-controller --output=jsonpath="{.status.loadBalancer.ingress[0]['ip']}"`
 az network dns record-set a delete  -g dns -z donhighthecontainerguy.com -y -n "*.ingress"
 az network dns record-set a add-record  -n "*.ingress" -g dns -z donhighthecontainerguy.com --ipv4-address $INGRESS_IP
 az network dns record-set a update  -n "*.ingress" -g dns -z donhighthecontainerguy.com --set ttl=10

@@ -19,21 +19,23 @@ resource "azurerm_subnet" "argocd" {
 }
 
 module "aks" {
-  source                         = "Azure/aks/azurerm"
-  resource_group_name            = var.resource_group_name
-  kubernetes_version             = var.kubernetes_version
-  orchestrator_version           = var.kubernetes_version
-  prefix                         = "sm"
-  network_plugin                 = "kubenet"
-  public_ssh_key                 = var.public_ssh_key
-  vnet_subnet_id                 = azurerm_subnet.argocd.id
-  enable_log_analytics_workspace = false
-
+  source               = "Azure/aks/azurerm"
+  version              = "7.5.0"
+  resource_group_name  = var.resource_group_name
+  kubernetes_version   = var.kubernetes_version
+  orchestrator_version = var.kubernetes_version
+  prefix               = "sm"
+  network_plugin       = "kubenet"
+  public_ssh_key       = var.public_ssh_key
+  vnet_subnet_id       = azurerm_subnet.argocd.id
 
   agents_count = var.agents_count
   agents_size  = var.agents_size
 
   network_policy = "calico"
+
+  role_based_access_control_enabled = true
+  rbac_aad                          = false
 
   depends_on = [azurerm_subnet.argocd]
 

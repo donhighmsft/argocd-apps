@@ -13,7 +13,6 @@ variable "public_ssh_key" {
   default     = ""
 }
 
-
 variable "vnet_address_prefix" {
   description = "vnet_address_prefix"
   default     = ""
@@ -36,7 +35,7 @@ variable "agents_size" {
 
 variable "kubernetes_version" {
   description = "kubernetes_version"
-  default     = ""
+  default     = null
 }
 
 variable "service_mesh_type" {

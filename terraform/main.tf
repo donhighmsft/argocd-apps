@@ -20,6 +20,7 @@ resource "azurerm_subnet" "argocd" {
 
 module "aks" {
   source                         = "Azure/aks/azurerm"
+  version                        = "4.16.0"
   resource_group_name            = var.resource_group_name
   kubernetes_version             = var.kubernetes_version
   orchestrator_version           = var.kubernetes_version
